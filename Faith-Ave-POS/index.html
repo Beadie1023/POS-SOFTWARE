@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Screws and Stuff — Point of Sale</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">FA</div>
+        <div>
+          <strong>Screws and Stuff</strong>
+          <span>Point of Sale</span>
+        </div>
+      </div>
+      <nav class="nav">
+        <button class="nav-btn active" data-view="register">Register</button>
+        <button class="nav-btn" data-view="inventory">Inventory</button>
+        <button class="nav-btn" data-view="sales">Sales History</button>
+        <button class="nav-btn" data-view="customers">Customers</button>
+        <button class="nav-btn" data-view="settings">Settings</button>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="cashier-chip">
+          <span>Cashier</span>
+          <strong id="cashierName">Front Counter</strong>
+        </div>
+        <p class="vat-note">Bahamas VAT 10%</p>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div>
+          <h1 id="viewTitle">Sales Register</h1>
+          <p id="viewSubtitle">Ring up hardware, plumbing, electrical, and lumber</p>
+        </div>
+        <div class="topbar-meta">
+          <div>
+            <span>Ticket</span>
+            <strong id="ticketNo">—</strong>
+          </div>
+          <div>
+            <span>Date</span>
+            <strong id="clock">—</strong>
+          </div>
+        </div>
+      </header>
+
+      <section id="view-register" class="view active">
+        <div class="register-grid">
+          <div class="panel catalog-panel">
+            <div class="toolbar">
+              <input id="skuSearch" type="text" placeholder="Scan or search SKU, barcode, or item name" autocomplete="off" />
+              <select id="categoryFilter"></select>
+            </div>
+            <div id="categoryPills" class="pills"></div>
+            <div id="productGrid" class="product-grid"></div>
+          </div>
+
+          <div class="panel ticket-panel">
+            <div class="ticket-head">
+              <div>
+                <h2>Current Sale</h2>
+                <button id="customerPickBtn" class="link-btn" type="button">Walk-in customer</button>
+              </div>
+              <div class="ticket-actions">
+                <button id="holdBtn" type="button">Hold</button>
+                <button id="recallBtn" type="button">Recall</button>
+                <button id="clearBtn" type="button" class="danger">Clear</button>
+              </div>
+            </div>
+            <div class="customer-bin-row">
+              <label for="customerBin">Bahamas Identification Number (BIN)</label>
+              <input id="customerBin" type="text" inputmode="numeric" maxlength="10" placeholder="10-digit BIN" />
+            </div>
+            <div class="table-wrap">
+              <table class="ticket-table">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>VAT</th>
+                    <th>Amount</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="cartBody"></tbody>
+              </table>
+            </div>
+            <div id="emptyCart" class="empty-cart">No items on this ticket. Search or tap a product to begin.</div>
+            <div class="totals">
+              <div><span>Subtotal (ex VAT)</span><strong id="subtotalEl">$0.00</strong></div>
+              <div><span>Bahamas VAT (10%)</span><strong id="vatEl">$0.00</strong></div>
+              <div><span>Discount</span><strong id="discountEl">$0.00</strong></div>
+              <div class="grand"><span>Amount Due</span><strong id="totalEl">$0.00</strong></div>
+            </div>
+            <div class="pay-row">
+              <input id="discountInput" type="number" min="0" step="0.01" placeholder="Discount $" />
+              <button id="payBtn" class="pay-btn" type="button">Charge</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-inventory" class="view">
+        <div class="panel">
+          <div class="toolbar">
+            <input id="invSearch" type="text" placeholder="Search inventory" />
+            <button id="addProductBtn" type="button" class="primary">New Item</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>SKU</th>
+                  <th>Barcode</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>On Hand</th>
+                  <th>Cost</th>
+                  <th>Price</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="inventoryBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-sales" class="view">
+        <div class="panel">
+          <div class="toolbar">
+            <input id="salesSearch" type="text" placeholder="Search receipts, cashier, or BIN" />
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Receipt</th>
+                  <th>Date</th>
+                  <th>Customer / BIN</th>
+                  <th>Items</th>
+                  <th>VAT</th>
+                  <th>Total</th>
+                  <th>Tender</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="salesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-customers" class="view">
+        <div class="panel">
+          <div class="toolbar">
+            <input id="custSearch" type="text" placeholder="Search customers" />
+            <button id="addCustomerBtn" type="button" class="primary">New Customer</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>BIN</th>
+                  <th>Notes</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="customersBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-settings" class="view">
+        <div class="panel settings-panel">
+          <h2>Store &amp; Register</h2>
+          <div class="form-grid">
+            <label>Store name<input id="setStoreName" type="text" /></label>
+            <label>Legal name<input id="setLegalName" type="text" /></label>
+            <label>Address line 1<input id="setAddr1" type="text" /></label>
+            <label>Address line 2<input id="setAddr2" type="text" /></label>
+            <label>Phone<input id="setPhone" type="text" /></label>
+            <label>Email<input id="setEmail" type="text" /></label>
+            <label>Cashier name<input id="setCashier" type="text" /></label>
+            <label>VAT rate (%)<input id="setVat" type="number" min="0" step="0.01" readonly /></label>
+            <label>Receipt footer<input id="setFooter" type="text" /></label>
+            <label>Register ID<input id="setRegisterId" type="text" /></label>
+          </div>
+          <p class="hint">Bahamas VAT is locked at 10% for this register. Receipts print at 3 inches (76 mm thermal).</p>
+          <button id="saveSettingsBtn" class="primary" type="button">Save Settings</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card" id="modalCard"></div>
+  </div>
+
+  <div id="printRoot" class="print-root" aria-hidden="true"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
